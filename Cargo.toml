@@ -1,0 +1,11 @@
+[package]
+name = "amby_sys"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+amby_core = { path = "../amby_core" }
+log = "0.4.17"
+simple_logger = "4.0.0"
