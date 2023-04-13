@@ -3,7 +3,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 use std::{process, thread};
 
-use amby_core::{ReadAll, ReadRequest, Request, Response, ToBytesVec, TryFromSlice, WriteRequest};
+use amby::{ReadAll, ReadRequest, Request, Response, ToBytesVec, TryFromSlice, WriteRequest};
 use log::{error, info};
 
 use crate::traits::UnlockOrThrow;

@@ -4,9 +4,7 @@ use std::net::TcpStream;
 use std::sync::Arc;
 use std::{process, thread};
 
-use amby_core::Response;
-use amby_core::ToBytesVec;
-use amby_core::{AppMetadata, ReadAll};
+use amby::{AppMetadata, ReadAll, Response, ToBytesVec};
 use log::{error, info};
 
 use crate::traits::UnlockOrThrow;
