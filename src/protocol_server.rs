@@ -1,12 +1,12 @@
 use std::io::Write;
 use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
-use std::{process, thread};
+use std::thread;
 
-use amby::{ReadAll, ReadRequest, Request, Response, ToBytesVec, TryFromSlice, WriteRequest};
+use amby::{ReadAll, ReadRequest, Request, Response, ToBytes, TryFromSlice, WriteRequest};
 use log::{error, info};
 
-use crate::traits::UnlockOrThrow;
+use crate::traits::{TcpListenOrThrow, UnlockOrThrow};
 use crate::types::AsyncStreamMap;
 use crate::util::{retry, RETRY_LIMIT};
 
@@ -15,13 +15,7 @@ pub fn start_protocol_server(
     app_stream_map_clone: AsyncStreamMap,
 ) {
     thread::spawn(move || {
-        let tcp_listener = match TcpListener::bind(format!("127.0.0.1:4001")) {
-            Ok(tcp_listener) => tcp_listener,
-            Err(err) => {
-                error!("Error initializing protocol server. Error: {err}");
-                process::exit(1);
-            }
-        };
+        let tcp_listener = TcpListener::listen_or_throw("127.0.0.1:4001", "protocol");
         info!("Protocol server running at 127.0.0.1:4001");
 
         for incoming_connection in tcp_listener.incoming() {

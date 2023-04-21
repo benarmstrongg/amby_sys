@@ -19,6 +19,7 @@ fn main() {
 
     let protocol_stream_map_ref: AsyncStreamMap = Arc::new(RwLock::new(HashMap::new()));
     let app_stream_map_ref: AsyncStreamMap = Arc::new(RwLock::new(HashMap::new()));
+    let event_stream_map_ref: AsyncStreamMap = Arc::new(RwLock::new(HashMap::new()));
 
     info!("Registering protocol server");
     start_protocol_server(
@@ -27,7 +28,10 @@ fn main() {
     );
 
     info!("Registering app server");
-    start_app_server(Arc::clone(&app_stream_map_ref));
+    start_app_server(
+        Arc::clone(&app_stream_map_ref),
+        Arc::clone(&event_stream_map_ref),
+    );
 
     loop {}
 }
