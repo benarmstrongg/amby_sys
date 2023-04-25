@@ -3,7 +3,7 @@ use std::net::{TcpListener, TcpStream};
 use std::sync::Arc;
 use std::thread;
 
-use amby::{ReadAll, ReadRequest, Request, Response, ToBytes, TryFromSlice, WriteRequest};
+use amby::{Name, ReadAll, ReadRequest, Request, Response, ToBytes, WriteRequest};
 use log::{error, info};
 
 use crate::traits::{TcpListenOrThrow, UnlockOrThrow};
@@ -73,11 +73,11 @@ pub fn start_protocol_server(
 fn register_protocol_client(
     mut protocol_stream: &TcpStream,
     stream_map_lock: &AsyncStreamMap,
-) -> Result<String, ()> {
+) -> Result<Name, ()> {
     info!("Registering protocol client stream");
     let protocol_name = match protocol_stream.read_all() {
         Ok(bytes) => {
-            let protocol_name = match String::try_from_slice(&bytes) {
+            let protocol_name = match Name::try_from_slice(&bytes) {
                 Ok(name) => name,
                 Err(err) => {
                     error!("Error parsing string name from protocol stream. Error: {err}");
@@ -146,7 +146,7 @@ fn pool_request(
 }
 
 fn send_request(
-    app_name: &str,
+    app_name: &Name,
     req: Request,
     app_stream_map_lock: &AsyncStreamMap,
 ) -> Result<TcpStream, ()> {
@@ -181,7 +181,7 @@ fn send_request(
     }
 }
 
-fn pool_response(app_name: &str, app_stream: &TcpStream) -> Result<Response, ()> {
+fn pool_response(app_name: &Name, app_stream: &TcpStream) -> Result<Response, ()> {
     match retry(RETRY_LIMIT, move || {
         let mut app_stream = app_stream;
         match app_stream.read_all() {

@@ -4,6 +4,7 @@ use std::net::TcpStream;
 use std::sync::Arc;
 use std::thread;
 
+use amby::Name;
 use amby::{AppMetadata, ReadAll, Response, ToBytes};
 use log::{error, info};
 
@@ -33,7 +34,10 @@ pub fn start_app_server(
                     }
                 };
                 let mut event_stream_map = event_stream_map_lock.write_or_throw();
-                event_stream_map.insert(connection_count.to_string(), event_stream);
+                event_stream_map.insert(
+                    Name::from_str_unchecked(&connection_count.to_string()),
+                    event_stream,
+                );
                 connection_count += 1;
             }
         });
